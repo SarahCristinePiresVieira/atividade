@@ -1,0 +1,277 @@
+/*atividade 1*/
+
+UPDATE debitos SET situacao_debito = 'Atrasado'
+
+WHERE datavencimento <= '2024-03-04' AND situacao_debito IN ('Negociado', 'Pago');
+
+
+/*atividade 2*/
+
+update debitos
+
+set situacao_debito = 'Pendente'
+
+WHERE datavencimento > '2024-03-04' AND situacao_debito IN ('Negociado', 'Pago');
+
+
+/*atividade 3*/
+
+UPDATE debitos 
+
+SET datavencimento = DATE_SUB(datavencimento, INTERVAL 5 YEAR)
+
+WHERE situacao_debito = 'Negociado';
+
+
+/*atividade 4*/
+
+select nome, email, telefone from pessoa;
+
+
+/*atividade 5*/
+
+select * from produto where preco_unitario > 100;
+
+
+/*atividade 6*/
+
+select * from venda where data_venda = '2024-03-04';
+
+
+/*atividade 7*/
+
+select pessoa.nome, pessoa.data_nascimento, (2024 - YEAR(pessoa.data_nascimento)) as idade
+
+from fornecedor
+
+left join pessoa on pessoa.id_pessoa = fornecedor.id_fornecedor
+
+where fornecedor.id_fornecedor not in(select produto.id_fornecedor from produto);
+
+
+/*atividade 8*/
+
+select * from cliente where id_cliente in (select id_cliente from debitos where situacao_debito = 'Vencido');
+
+
+/* atividade 11*/
+
+update produto
+
+set preco_unitario = preco_unitario * 1.1
+
+where quantidade_estoque < 10;
+
+
+/*atividade 12*/
+
+Tabela de entrega não existe
+
+
+/*atividade 13*/
+
+update debitos
+
+set situacao_debito = 'Pago'
+
+where id_debito in (select id_debito from pagamento)
+
+and situacao_debito = 'Atrasado';
+
+
+/*atividade 14*/
+
+Tabela carrinho de compras não existe
+
+
+/*atividade 15*/
+
+select * from venda where data_venda >= "2023-01-01" and data_venda < "2024-01-01";
+
+
+/*atividade 16*/
+
+select * from produto where quantidade_estoque >5 and quantidade_estoque <20;
+
+
+
+/*atividade 17*/
+
+select * from pessoa where nome like "A%";
+
+
+
+/*atividade 18*/
+
+SELECT produto.*
+
+FROM produto
+
+LEFT JOIN itensvenda ON produto.id_produto = itensvenda.id_produto
+
+WHERE itensvenda.id_produto IS NULL;
+
+
+
+/*atividade 19*/
+
+SELECT produto.nome, itensvenda.quantidade, itensvenda.valor_unitario
+
+FROM pessoa
+
+JOIN itensvenda ON pessoa.id_pessoa = itensvenda.id_produto
+
+JOIN produto ON itensvenda.id_produto = produto.id_produto
+
+WHERE pessoa.nome IN ('Jordan Jimenez', 'Julie Becker');
+
+
+
+/*atividade 20*/
+
+
+SELECT cliente.id_cliente, pessoa.nome
+
+  FROM cliente 
+
+  left join pessoa on pessoa.id_pessoa = cliente.id_pessoa
+
+  
+
+  union
+
+  
+
+  SELECT fornecedor.id_fornecedor, pessoa.nome
+
+  FROM fornecedor 
+
+  left join pessoa on pessoa.id_pessoa = fornecedor.id_pessoa
+
+
+
+
+/*atividade 21*/
+
+SELECT venda.*, pessoa.*, forma_pagamento.*
+
+FROM venda
+
+JOIN pessoa ON venda.id_pessoa = pessoa.id_pessoa
+
+JOIN forma_pagamento ON venda.id_forma_pagamento = forma_pagamento.id_forma_pagamento;
+
+
+/*atividade 22*/
+
+SELECT * FROM itensvenda WHERE id_venda IN (SELECT id_venda FROM historico_compras_cliente WHERE id_cliente = 2);
+
+
+/*atividade 23*/
+
+select pessoa.nome AS nome, 
+
+YEAR(CURRENT_DATE) - YEAR(pessoa.data_nascimento) + 1 AS idade
+
+FROM pessoa WHERE id_pessoa IN (SELECT id_pessoa FROM cliente) OR id_pessoa IN (SELECT id_pessoa FROM funcionario)
+
+
+/*atividade 24*/
+
+select * from endereco where id_bairro and id_logradouro in(select id_pessoa from endereco)
+
+
+/*atividade 25*/
+
+select * from produto where preco_unitario > (select AVG(preco_unitario) from produto);
+
+
+
+/*atividade 26*/
+
+select * from pessoa where id_pessoa in (select id_pessoa from endereco where ID_municipio in (select id_municipio from municipio where populacao > 1000000));
+
+
+/*atividade 27*/
+
+select fornecedor.id_fornecedor, produto.nome, itensvenda.quantidade
+
+from produto
+
+inner join itensvenda on itensvenda.id_produto = produto.id_produto
+
+inner join fornecedor on fornecedor.id_fornecedor = produto.id_fornecedor;
+
+
+
+/*atividade 28*/
+
+select * from cliente
+
+where id_cliente in (select id_cliente from pagamento where id_venda in (select id_venda from venda where valor_total > 500));
+
+
+/*atividade 29*/
+
+select pessoa.nome, municipio.nome, bairro.nome, logradouro.nome
+
+from endereco inner join municipio on municipio.ID_municipio = endereco.ID_municipio
+
+inner join pessoa on pessoa.id_pessoa = endereco.id_pessoa
+
+inner join bairro on bairro.id_bairro = endereco.id_bairro
+
+inner join logradouro on logradouro.id_logradouro = endereco.ID_logradouro;
+
+
+/*atividade 30*/
+
+select produto.nome, produto.preco_unitario, pessoa.nome
+
+from fornecedor left join produto on produto.id_fornecedor = fornecedor.id_fornecedor
+
+left join pessoa on pessoa.id_pessoa = fornecedor.id_pessoa;
+
+
+/*atividade 31*/
+
+select * from produto order by quantidade_estoque desc;
+
+
+/*atividade 32*/
+
+select * from venda order by valor_total ASC;
+
+
+/*atividade 33*/
+
+select * from produto
+
+where quantidade_estoque < (select AVG(quantidade_estoque) from produto);
+
+
+/*atividade 34*/
+
+SELECT telefone, COUNT(telefone)
+
+FROM pessoa
+
+GROUP BY telefone
+
+HAVING COUNT(telefone) > 1;
+
+
+/*atividade 35*/
+
+update produto set preco_unitario = preco_unitario * 1.1 
+
+where id_fornecedor in (select id_fornecedor from fornecedor 
+
+where id_pessoa in (select id_pessoa from endereco 
+
+where ID_municipio in (select ID_municipio from municipio where uf = 'SP')));
+
+
+/*atividade 36*/
+
+select * from venda where id_venda in (select id_venda from debitos where situacao_debito = 'Negociado');
